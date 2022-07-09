@@ -3,31 +3,53 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (file_exists("datos.txt")) //Si el archivo existe cargo los clientes en la variable aTareas
-{$strJson= file_get_contents("datos.txt");
-$aTareas= json_decode($strJson, true);}//LEE ARCHIVOS, va a almacenar todo el contenido en $strJson$aTareas=json_decode($strJson, true);} //json_decode recibe los parametros y nos devuelve el array que va almacenar en atareas
+if (file_exists("datos.txt"))
+{$strJson=file_get_contents("datos.txt");
+$aTareas= json_decode($strJson, true);}
 else
-{$aTareas=array();}//Si el archivo no existe es porque no hay clientes, entonces es un array vacio
+{ $aTareas = array();}
 
-
-if
-(isset($_GET["id"])) //isset define la variable GET
-{$id=$_GET["id"];}//GEt accede a toda la query string
+if(isset($_GET["id"]))
+{$id=$_GET["id"];}
 else
-{$id="";}//pregunto por una variable que no tiene contenido
-if(isset($_GET["do"])&& $_GET["do"]== "eliminar")
-    {unset($aTareas[$id]); //unsset elimina variables o posicion de un array
-        $strJson= json_encode($aTareas); //almacena en atareas
-        file_put_contents ("datos.txt", $strJson);
-        header("Location:index.php");}
-   
+{$id="";}
 
-if ($_POST){$titulo= $_POST["txtTitulo"]; $prioridad= $_POST["lstPrioridad"]; $usuario= $_POST["lstUsuario"]; $estado= $_POST["lstEstado"]; $descripcion=$_POST["txtDescripcion"];}
-//id para editar tareas
-if($id>=0){$aTareas[$id]=array("fecha"=>$aTareas[$id]["fecha"],"prioridad"=>$prioridad, "usuario"=>$usuario, "estado"=>$estado, "titulo"=>$titulo, "descripcion"=>$descripcion);}
-else //vacio para hacer tareas
-{$aTareas[] =array("fecha"=> date("d/m/Y"), "prioridad"=>$prioridad, "usuario"=>$usuario, "estado"=>$estado,"titulo"=>$titulo,"descripcion"=>$descripcion);}
 
+if($_POST)
+{$titulo=$_POST["txtTitulo"];
+$prioridad=$_POST["lstPrioridad"];
+$usuario=$_POST["lstUsuario"];
+$estado=$_POST["lstEstado"];
+$descripcion=$_POST["txtDescripcion"];
+
+if($id>=0) //id es para editar tareas
+
+{$aTareas[$id]=array(
+    "fecha"=> $aTareas[$id]["fecha"],
+    "prioridad"=>$prioridad,
+    "usuario"=>$usuario,
+    "estado"=> $estado,
+    "titulo"=>$titulo,
+    "descripcion"=>$descripcion);}
+
+else
+{$aTareas[]=array(
+    "fecha"=> date ("d/m/Y"),
+    "prioridad"=>$prioridad,
+    "usuario"=>$usuario,
+    "estado"=>$estado,
+    "titulo"=>$titulo,
+    "descripcion"=>$descripcion);}
+
+
+    $strJson = json_encode($aTareas); //convierte el array en un json
+    file_put_contents("datos.txt", $strJson);}//Almacena en  datos.txt el json con file_put_contents
+
+if (isset($_GET["do"])&& $_GET["do"]=="eliminar")
+{unset($aTareas[$id]);
+$strJson = json_encode($aTareas);
+file_put_contents("datos.txt", $strJson);
+header("Location: index.php");}
 ?>
 
 <!DOCTYPE html>
@@ -64,20 +86,20 @@ else //vacio para hacer tareas
                         <div>
                             <label for="lstUsuario">Usuario</label>
                             <select name="lstUsuario" id="lstUsuario"class="form-control" required>
-                                <option value=""disabled selected>seleccionar</option>
+                                <option value=""disabled selected>seleccionar</option> <!--selected es el que nos figura en pantalla-->
                                 <option value="Soledad"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Soledad"?"selected":"";?>>Soledad</option>
-                                <option value="Mario"<?php echo isset ($aTareas [$id])&& $aTareas[$id]["prioridad"]=="Mario"?"selected":"";?>>Mario</option>
-                                <option value="Belen"<?php echo isset ($aTareas [$id])&& $aTareas [$id]["prioridad"]=="Belen"?"selected":"";?>>Belen</option>
+                                <option value="Mario"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Mario"?"selected":"";?>>Mario</option>
+                                <option value="Belen"<?php echo isset ($aTareas[$id])&& $aTareas [$id]["prioridad"]=="Belen"?"selected":"";?>>Belen</option>
                             </select>
                         </div>
                         <div>
                             <label for="lstEstado">Estado</label>
                             <select name="lstEstado" id="lstEstado" class="form-control" required>
                                 <option value=""desabled selected>Seleccionar</option>
-                                <option value="Sin asignar"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Sin asignar"?"selected":"";?>>Sin asignar</option>
-                                <option value="En proceso"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="En proceso"?"selected":"";?>>En proceso</option>
-                                <option value="Asignado"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Asignado"?"selected":"";?>>Asignado</option>
-                                <option value="Terminado"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Terminado"?"selected":"";?>>Terminado</option>
+                                <option value="Sin asignar"<?php echo isset ($aTareas[$id]) && $aTareas[$id]["estado"]=="Sin asignar"?"selected":"";?>>Sin asignar</option>
+                                <option value="En proceso"<?php echo isset ($aTareas[$id]) && $aTareas[$id]["estado"]=="En proceso"?"selected":"";?>>En proceso</option>
+                                <option value="Asignado"<?php echo isset ($aTareas[$id]) && $aTareas[$id]["estado"]=="Asignado"?"selected":"";?>>Asignado</option>
+                                <option value="Terminado"<?php echo isset ($aTareas[$id]) && $aTareas[$id]["estado"]=="Terminado"?"selected":"";?>>Terminado</option>
                             </select>
                         </div>
                         <div >
@@ -108,6 +130,7 @@ else //vacio para hacer tareas
                         <th>Prioridad</th>
                         <th>Usuario</th>
                         <th>Estado</th>
+                        <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -120,9 +143,8 @@ else //vacio para hacer tareas
                                     <td><?php echo $tarea["usuario"];?></td>
                                     <td><?php echo $tarea["estado"];?></td>
                                     <td>
-                                        <a href="?id=<?php echo $pos ?>"class="btn"><i class="bi bi-pencil-square"></i></a>
-                                        <a href="?id=<?php echo $pos ?>&do=eliminar"class="btn"><i class="bi bi-trash2-fill"></i></a>
-                                    </td>
+                                    <a href="?id=<?php echo $pos?>&do=eliminar"class="btn btn-success"><i class=" fa-solid fa-trash"></i></a>
+                                    <a href="?id=<?php echo $pos?>"class="btn btn-warning"> <i class="btn fa-solid fa-pen"> </i></a> </td>
                                 </tr>
                                 <?php }?>
                         </tbody>
