@@ -16,7 +16,7 @@ else
 
 
 if($_POST) //definimos las variables donde van a estar almacenado todos los dato
-{$titulo=$_POST["txtTitulo"];
+{$titulo=$_POST["txtTitulo"]; //variable POST O REQUEST
 $prioridad=$_POST["lstPrioridad"];
 $usuario=$_POST["lstUsuario"];
 $estado=$_POST["lstEstado"];
@@ -154,8 +154,8 @@ header("Location: index.php");}
         <?php else: ?>
             <div class="row">
                 <div class="col-12">
-                    <div class="alert alert-info" role="alert">
-                        Aún no se han cargado tareas.
+                    <div class="alert alert-dark" role="alert">
+                       No hay tareas cargadas en el sistema.
                     </div>
                 </div>
             </div>
