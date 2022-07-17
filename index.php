@@ -10,9 +10,9 @@ else
 { $aTareas = array();}
 
 if(isset($_GET["id"])) //GET variable de la query string, si viene la def
-{$id=$_GET["id"];} //si no la dejo como vacio
+{$id=$_GET["id"];} 
 else
-{$id="";}
+{$id="";}//si no la dejo como vacio
 
 
 if($_POST) //definimos las variables donde van a estar almacenado todos los dato
@@ -87,9 +87,9 @@ header("Location: index.php");}
                             <label for="lstUsuario">Usuario</label>
                             <select name="lstUsuario" id="lstUsuario"class="form-control" required>
                                 <option value=""disabled selected>seleccionar</option> <!--selected es el que nos figura en pantalla-->
-                                <option value="Soledad"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Soledad"?"selected":"";?>>Soledad</option>
-                                <option value="Mario"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["prioridad"]=="Mario"?"selected":"";?>>Mario</option>
-                                <option value="Belen"<?php echo isset ($aTareas[$id])&& $aTareas [$id]["prioridad"]=="Belen"?"selected":"";?>>Belen</option>
+                                <option value="Soledad"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["usuario"]=="Soledad"?"selected":"";?>>Soledad</option>
+                                <option value="Mario"<?php echo isset ($aTareas[$id])&& $aTareas[$id]["usuario"]=="Mario"?"selected":"";?>>Mario</option>
+                                <option value="Belen"<?php echo isset ($aTareas[$id])&& $aTareas [$id]["usuario"]=="Belen"?"selected":"";?>>Belen</option>
                             </select>
                         </div>
                         <div>
@@ -151,15 +151,15 @@ header("Location: index.php");}
                     </table>
                 </div>
         </div>
-        <?php else: ?>
+        <?php { ?>
             <div class="row">
                 <div class="col-12">
                     <div class="alert alert-dark" role="alert">
-                       No hay tareas cargadas en el sistema.
+                       No hay tareas.
                     </div>
                 </div>
             </div>
-        <?php endif; ?>
+        <?php } ?>
     </main>
     
 
